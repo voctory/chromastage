@@ -20,19 +20,32 @@ final class AudioCapture: NSObject, ObservableObject {
   nonisolated(unsafe) private let ringBuffer = AudioRingBuffer(capacity: 16384)
   private let audioQueue = DispatchQueue(label: "Chromastage.AudioCapture")
   private var stream: SCStream?
+  private var isStarting = false
+  private var permissionProbeTask: Task<Void, Never>?
+  private var pendingStartAfterPermission = false
 
   func start(requestPermission: Bool = false) async {
-    if isCapturing {
+    if isCapturing || isStarting {
+      if pendingStartAfterPermission {
+        schedulePermissionProbe()
+      }
       return
     }
+
+    isStarting = true
+    defer { isStarting = false }
 
     statusMessage = "Requesting system audio capture permission..."
 
     let permission = refreshPermissionStatus(requestIfNeeded: requestPermission)
-    if permission != .granted && !requestPermission {
+    if permission != .granted {
+      pendingStartAfterPermission = true
+      schedulePermissionProbe()
       markCaptureIssue("Enable Screen & System Audio Recording in System Settings.")
       return
     }
+    pendingStartAfterPermission = false
+    stopPermissionProbe()
 
     do {
       let content = try await SCShareableContent.current
@@ -70,6 +83,8 @@ final class AudioCapture: NSObject, ObservableObject {
   }
 
   func stop() {
+    pendingStartAfterPermission = false
+    stopPermissionProbe()
     guard let stream else { return }
     stream.stopCapture { [weak self] error in
       DispatchQueue.main.async {
@@ -85,18 +100,38 @@ final class AudioCapture: NSObject, ObservableObject {
   }
 
   func refreshPermissionStatus(requestIfNeeded: Bool = false) -> ScreenCapturePermissionStatus {
+    if permissionStatus == .granted && !requestIfNeeded {
+      return .granted
+    }
     var granted = CGPreflightScreenCaptureAccess()
     if !granted, requestIfNeeded {
       granted = CGRequestScreenCaptureAccess()
     }
     let status: ScreenCapturePermissionStatus = granted ? .granted : .denied
     permissionStatus = status
+    if granted {
+      if !pendingStartAfterPermission && !isStarting {
+        stopPermissionProbe()
+      }
+    } else if pendingStartAfterPermission {
+      schedulePermissionProbe()
+      Task { @MainActor in
+        await self.probeShareableContentAccess()
+      }
+    }
     return status
   }
 
   func requestPermission() -> Bool {
+    pendingStartAfterPermission = true
     let granted = CGRequestScreenCaptureAccess()
     permissionStatus = granted ? .granted : .denied
+    if granted {
+      pendingStartAfterPermission = false
+      stopPermissionProbe()
+    } else {
+      schedulePermissionProbe()
+    }
     return granted
   }
 
@@ -106,6 +141,53 @@ final class AudioCapture: NSObject, ObservableObject {
     needsAttention = true
     isCapturing = false
     stream = nil
+  }
+
+  private func schedulePermissionProbe() {
+    guard permissionProbeTask == nil else { return }
+    permissionProbeTask = Task { @MainActor [weak self] in
+      guard let self else { return }
+      while !Task.isCancelled {
+        try? await Task.sleep(nanoseconds: 1_500_000_000)
+        var status = self.refreshPermissionStatus(requestIfNeeded: false)
+        if status != .granted {
+          status = await self.probeShareableContentAccess()
+        }
+        if status == .granted {
+          if self.isStarting {
+            continue
+          }
+          self.permissionProbeTask = nil
+          if self.pendingStartAfterPermission && !self.isCapturing {
+            self.pendingStartAfterPermission = false
+            await self.start()
+          }
+          return
+        }
+      }
+    }
+  }
+
+  private func stopPermissionProbe() {
+    permissionProbeTask?.cancel()
+    permissionProbeTask = nil
+  }
+
+  @MainActor
+  @discardableResult
+  private func probeShareableContentAccess() async -> ScreenCapturePermissionStatus {
+    guard permissionStatus != .granted else { return .granted }
+    do {
+      let content = try await SCShareableContent.current
+      if !content.displays.isEmpty {
+        permissionStatus = .granted
+        stopPermissionProbe()
+        return .granted
+      }
+    } catch {
+      // Ignore; permission likely still denied.
+    }
+    return permissionStatus
   }
 
   nonisolated func latestAudioBytes(count: Int) -> (mono: Data, left: Data, right: Data) {
