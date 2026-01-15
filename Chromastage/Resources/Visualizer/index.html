@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chromastage Mac Visualizer</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background: #050505;
+        overflow: hidden;
+      }
+      #output {
+        width: 100%;
+        height: 100%;
+        display: block;
+        background: #050505;
+      }
+    </style>
+    <script src="./presets/base.min.js"></script>
+    <script src="./presets/extra.min.js"></script>
+    <script src="./presets/imageData.min.js"></script>
+    <script src="./presets/presets-glue.js"></script>
+    <script src="./butterchurn.iife.js"></script>
+    <script src="./curated-presets.js"></script>
+  </head>
+  <body>
+    <canvas id="output"></canvas>
+    <script>
+      if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.nativeLog) {
+        window.webkit.messageHandlers.nativeLog.postMessage({ level: "info", message: "index.html loaded" });
+      }
+    </script>
+    <script src="./visualizer.js"></script>
+  </body>
+</html>

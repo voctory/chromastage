@@ -1,0 +1,384 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		00E87DC34A5FBA0B8004F259 /* ChromastageShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 8453A5C007C3DBBDB83CB646 /* ChromastageShaders.metal */; };
+		0B9D1A2F4F25A1B7C1D43E5A /* BasicWaveformRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E1F0A9B8C7D6E5F4A3B2C /* BasicWaveformRenderer.swift */; };
+		B3F9D1E24A6C8B0F12345679 /* JSEquationRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A45E9F3D2C4B1E0F12345678 /* JSEquationRunner.swift */; };
+		1A2B3C4D5E6F708192A3B4C5 /* PaletteExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2A6D0C1E0B34F2A8C7D9E01 /* PaletteExtractor.swift */; };
+		4E8F2C1B0A9D4E11A7C3B5D6 /* CustomWaveformRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D5C4B3A291807FECDAABBCC /* CustomWaveformRenderer.swift */; };
+		8C2D1B0A4F9E2C11A7B3D5E7 /* CustomShapeRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D3E2C1B0A4F9E2D11A7B3D5 /* CustomShapeRenderer.swift */; };
+		0F313764A5B06BB174F9D0BF /* AudioAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FEF7FF1AEDBFF32E696AFDA /* AudioAnalyzer.swift */; };
+		2CF9CE62AD9C25FB3FB2BB77 /* AudioCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA917783FE1686149731B6D /* AudioCapture.swift */; };
+		2DC260A818F775D0005C377E /* MusicController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1151A271C22F1B7E920F783F /* MusicController.swift */; };
+		F1E2D3C4B5A6978877665544 /* LyricsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B3C2D1E0F1A2B3C4D5E6F7 /* LyricsService.swift */; };
+		38AF27540849E69EFA960AD2 /* WebVisualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57029806FDE6F602ECFB60B9 /* WebVisualizerView.swift */; };
+		4192BA1888313208240E0695 /* MetalVisualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DCD63222369B2B0B43DF942 /* MetalVisualizerView.swift */; };
+		698AB27BD9604689E927E119 /* AudioLevelMeter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED1CBE00D080EEB9ED73E1F /* AudioLevelMeter.swift */; };
+		69CDA4E118ED90971E62E9CB /* WebLogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27482FA0FF775322F732CBD5 /* WebLogStore.swift */; };
+		7E0044B2851D5C89B8A4D93E /* PresetState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D14C9625A06CB5FFC3F92E3 /* PresetState.swift */; };
+		B2E7D8C9A0B1C2D3E4F50607 /* PresetLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1F7E6D5C4B3A29180706050 /* PresetLibrary.swift */; };
+		A1B2C3D4E5F60718293A4B5C /* PresetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4A1B2C3D4E5F60718293A4B /* PresetStore.swift */; };
+		7F913B4D7532473A222E16D1 /* Resources in Resources */ = {isa = PBXBuildFile; fileRef = 7E10437CC6B7EEDAB465EB51 /* Resources */; };
+		914172CBF2AA286B0825CB84 /* ChromastageApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D5D0E280DEE324C87A368C /* ChromastageApp.swift */; };
+		9470853A986EAF1E4BACB44A /* MetalRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA361A8DE3E6CC65CC2C285 /* MetalRenderer.swift */; };
+		5D8C0B7C3E9E4C1AA1B2C3D4 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718293A4D /* SettingsView.swift */; };
+		9759FDD465F183AE885DCF7F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E509A3EADE4557535A4EB4ED /* ContentView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0DCD63222369B2B0B43DF942 /* MetalVisualizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalVisualizerView.swift; sourceTree = "<group>"; };
+		3C2E1F0A9B8C7D6E5F4A3B2C /* BasicWaveformRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicWaveformRenderer.swift; sourceTree = "<group>"; };
+		A45E9F3D2C4B1E0F12345678 /* JSEquationRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSEquationRunner.swift; sourceTree = "<group>"; };
+		C2A6D0C1E0B34F2A8C7D9E01 /* PaletteExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteExtractor.swift; sourceTree = "<group>"; };
+		6D5C4B3A291807FECDAABBCC /* CustomWaveformRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWaveformRenderer.swift; sourceTree = "<group>"; };
+		9D3E2C1B0A4F9E2D11A7B3D5 /* CustomShapeRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomShapeRenderer.swift; sourceTree = "<group>"; };
+		1151A271C22F1B7E920F783F /* MusicController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicController.swift; sourceTree = "<group>"; };
+		A4B3C2D1E0F1A2B3C4D5E6F7 /* LyricsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsService.swift; sourceTree = "<group>"; };
+		1FA917783FE1686149731B6D /* AudioCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCapture.swift; sourceTree = "<group>"; };
+		27482FA0FF775322F732CBD5 /* WebLogStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebLogStore.swift; sourceTree = "<group>"; };
+		2E7E6F0F4EBF3A32AB52022F /* Chromastage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chromastage.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		57029806FDE6F602ECFB60B9 /* WebVisualizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebVisualizerView.swift; sourceTree = "<group>"; };
+		5FEF7FF1AEDBFF32E696AFDA /* AudioAnalyzer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioAnalyzer.swift; sourceTree = "<group>"; };
+		7E10437CC6B7EEDAB465EB51 /* Resources */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Resources; path = Chromastage/Resources; sourceTree = SOURCE_ROOT; };
+		8453A5C007C3DBBDB83CB646 /* ChromastageShaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = ChromastageShaders.metal; sourceTree = "<group>"; };
+		9D14C9625A06CB5FFC3F92E3 /* PresetState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetState.swift; sourceTree = "<group>"; };
+		A1F7E6D5C4B3A29180706050 /* PresetLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetLibrary.swift; sourceTree = "<group>"; };
+		C4A1B2C3D4E5F60718293A4B /* PresetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetStore.swift; sourceTree = "<group>"; };
+		DED1CBE00D080EEB9ED73E1F /* AudioLevelMeter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioLevelMeter.swift; sourceTree = "<group>"; };
+		E509A3EADE4557535A4EB4ED /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E8D5D0E280DEE324C87A368C /* ChromastageApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChromastageApp.swift; sourceTree = "<group>"; };
+		ECA361A8DE3E6CC65CC2C285 /* MetalRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalRenderer.swift; sourceTree = "<group>"; };
+		C7A1B2C3D4E5F60718293A4D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		4ACBB7B785887D73D7EA050F = {
+			isa = PBXGroup;
+			children = (
+				9196D4E2028FD0F665005380 /* Chromastage */,
+				4C7A8AD33C8116A0CABE6E9E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4C7A8AD33C8116A0CABE6E9E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2E7E6F0F4EBF3A32AB52022F /* Chromastage.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6545A1367596BD0548EF5ED1 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				5FEF7FF1AEDBFF32E696AFDA /* AudioAnalyzer.swift */,
+				1FA917783FE1686149731B6D /* AudioCapture.swift */,
+				DED1CBE00D080EEB9ED73E1F /* AudioLevelMeter.swift */,
+				3C2E1F0A9B8C7D6E5F4A3B2C /* BasicWaveformRenderer.swift */,
+				A45E9F3D2C4B1E0F12345678 /* JSEquationRunner.swift */,
+				6D5C4B3A291807FECDAABBCC /* CustomWaveformRenderer.swift */,
+				9D3E2C1B0A4F9E2D11A7B3D5 /* CustomShapeRenderer.swift */,
+				C2A6D0C1E0B34F2A8C7D9E01 /* PaletteExtractor.swift */,
+				E8D5D0E280DEE324C87A368C /* ChromastageApp.swift */,
+				8453A5C007C3DBBDB83CB646 /* ChromastageShaders.metal */,
+				E509A3EADE4557535A4EB4ED /* ContentView.swift */,
+				C7A1B2C3D4E5F60718293A4D /* SettingsView.swift */,
+				ECA361A8DE3E6CC65CC2C285 /* MetalRenderer.swift */,
+				0DCD63222369B2B0B43DF942 /* MetalVisualizerView.swift */,
+				1151A271C22F1B7E920F783F /* MusicController.swift */,
+				A4B3C2D1E0F1A2B3C4D5E6F7 /* LyricsService.swift */,
+				A1F7E6D5C4B3A29180706050 /* PresetLibrary.swift */,
+				C4A1B2C3D4E5F60718293A4B /* PresetStore.swift */,
+				9D14C9625A06CB5FFC3F92E3 /* PresetState.swift */,
+				27482FA0FF775322F732CBD5 /* WebLogStore.swift */,
+				57029806FDE6F602ECFB60B9 /* WebVisualizerView.swift */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		9196D4E2028FD0F665005380 /* Chromastage */ = {
+			isa = PBXGroup;
+			children = (
+				7E10437CC6B7EEDAB465EB51 /* Resources */,
+				6545A1367596BD0548EF5ED1 /* Sources */,
+			);
+			path = Chromastage;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9B1F9BC09C19D92F92DC04DE /* Chromastage */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8A8E2BE93C2D4AE22A0DB83E /* Build configuration list for PBXNativeTarget "Chromastage" */;
+			buildPhases = (
+				4A6BB0E9CBD670DB8E7108EF /* Sources */,
+				5B53B3DE2AECCFE009B8CCD8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Chromastage;
+			packageProductDependencies = (
+			);
+			productName = Chromastage;
+			productReference = 2E7E6F0F4EBF3A32AB52022F /* Chromastage.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4D068C80D63743EBC69D4BF9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+			};
+			buildConfigurationList = 328A272C7F105B8B71642842 /* Build configuration list for PBXProject "Chromastage" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 4ACBB7B785887D73D7EA050F;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9B1F9BC09C19D92F92DC04DE /* Chromastage */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5B53B3DE2AECCFE009B8CCD8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7F913B4D7532473A222E16D1 /* Resources in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4A6BB0E9CBD670DB8E7108EF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0F313764A5B06BB174F9D0BF /* AudioAnalyzer.swift in Sources */,
+				2CF9CE62AD9C25FB3FB2BB77 /* AudioCapture.swift in Sources */,
+				698AB27BD9604689E927E119 /* AudioLevelMeter.swift in Sources */,
+				0B9D1A2F4F25A1B7C1D43E5A /* BasicWaveformRenderer.swift in Sources */,
+				B3F9D1E24A6C8B0F12345679 /* JSEquationRunner.swift in Sources */,
+				4E8F2C1B0A9D4E11A7C3B5D6 /* CustomWaveformRenderer.swift in Sources */,
+				8C2D1B0A4F9E2C11A7B3D5E7 /* CustomShapeRenderer.swift in Sources */,
+				1A2B3C4D5E6F708192A3B4C5 /* PaletteExtractor.swift in Sources */,
+				914172CBF2AA286B0825CB84 /* ChromastageApp.swift in Sources */,
+				00E87DC34A5FBA0B8004F259 /* ChromastageShaders.metal in Sources */,
+				9759FDD465F183AE885DCF7F /* ContentView.swift in Sources */,
+
+				5D8C0B7C3E9E4C1AA1B2C3D4 /* SettingsView.swift in Sources */,
+				9470853A986EAF1E4BACB44A /* MetalRenderer.swift in Sources */,
+				4192BA1888313208240E0695 /* MetalVisualizerView.swift in Sources */,
+				2DC260A818F775D0005C377E /* MusicController.swift in Sources */,
+				F1E2D3C4B5A6978877665544 /* LyricsService.swift in Sources */,
+				B2E7D8C9A0B1C2D3E4F50607 /* PresetLibrary.swift in Sources */,
+				A1B2C3D4E5F60718293A4B5C /* PresetStore.swift in Sources */,
+				7E0044B2851D5C89B8A4D93E /* PresetState.swift in Sources */,
+				69CDA4E118ED90971E62E9CB /* WebLogStore.swift in Sources */,
+				38AF27540849E69EFA960AD2 /* WebVisualizerView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2CA793F04FBC7B33EFECCC7C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		7716DC1FABFBF5ADC25B0CD5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Chromastage/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chromastage.app;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		A20BA597DEAB127F5317669B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Chromastage/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chromastage.app;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		E822983C80D70683A0496B2C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		328A272C7F105B8B71642842 /* Build configuration list for PBXProject "Chromastage" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E822983C80D70683A0496B2C /* Debug */,
+				2CA793F04FBC7B33EFECCC7C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8A8E2BE93C2D4AE22A0DB83E /* Build configuration list for PBXNativeTarget "Chromastage" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A20BA597DEAB127F5317669B /* Debug */,
+				7716DC1FABFBF5ADC25B0CD5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4D068C80D63743EBC69D4BF9 /* Project object */;
+}
