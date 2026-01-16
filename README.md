@@ -33,6 +33,27 @@ xcodebuild -project Chromastage.xcodeproj -scheme Chromastage -configuration Deb
 open Build/Build/Products/Debug/Chromastage.app
 ```
 
+## Signing & Notarization
+
+Use the release script (modeled after `../codexbar` and `../trope-mac`) to build, sign, notarize, and zip:
+
+```sh
+./Scripts/sign-and-notarize.sh
+```
+
+Notes:
+- The script **requires a Developer ID Application identity** (Apple Development is not valid for notarized distribution).
+- Set `ARCHES="arm64 x86_64"` to force a universal build (default).
+- Notarization credentials (pick one):
+  - `NOTARYTOOL_PROFILE`: created via `xcrun notarytool store-credentials`.
+  - `APPLE_ID`, `APPLE_ID_PASSWORD`, `TEAM_ID`: Apple ID + app‑specific password.
+  - `APP_STORE_CONNECT_KEY_ID`, `APP_STORE_CONNECT_ISSUER_ID`, and `APP_STORE_CONNECT_API_KEY_P8` (or `APP_STORE_CONNECT_API_KEY_PATH`).
+- The script **skips notarization by default** unless credentials are provided.
+- The script outputs `Chromastage-<version>.zip` and `Chromastage-<version>.dmg` (with an `/Applications` link) by default.
+- Use `--skip-dmg` if you only want the zip.
+- When notarization is enabled, the script staples and validates the ticket.
+- To force sign-only (even if credentials are present), use `./Scripts/sign-and-notarize.sh --skip-notarization`.
+
 ## Permissions
 
 - Screen Recording: required for system audio capture (System Settings → Privacy & Security → Screen Recording).

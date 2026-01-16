@@ -6,3 +6,5 @@ DerivedData/
 *.xcworkspace/
 *.xcuserstate
 *.xcuserdata/
+Chromastage-*.zip
+Chromastage-*.dmg
