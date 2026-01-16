@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D1E2F3A4B5C6D7E8F9A0B1C2 /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = C2B1A0F9E8D7C6B5A4F3E2D1 /* AppIcon.icns */; };
 		00E87DC34A5FBA0B8004F259 /* ChromastageShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 8453A5C007C3DBBDB83CB646 /* ChromastageShaders.metal */; };
 		0B9D1A2F4F25A1B7C1D43E5A /* BasicWaveformRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E1F0A9B8C7D6E5F4A3B2C /* BasicWaveformRenderer.swift */; };
 		B3F9D1E24A6C8B0F12345679 /* JSEquationRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A45E9F3D2C4B1E0F12345678 /* JSEquationRunner.swift */; };
@@ -34,6 +35,7 @@
 /* Begin PBXFileReference section */
 		0DCD63222369B2B0B43DF942 /* MetalVisualizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalVisualizerView.swift; sourceTree = "<group>"; };
 		3C2E1F0A9B8C7D6E5F4A3B2C /* BasicWaveformRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicWaveformRenderer.swift; sourceTree = "<group>"; };
+		C2B1A0F9E8D7C6B5A4F3E2D1 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Resources/AppIcon.icns; sourceTree = "<group>"; };
 		A45E9F3D2C4B1E0F12345678 /* JSEquationRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSEquationRunner.swift; sourceTree = "<group>"; };
 		C2A6D0C1E0B34F2A8C7D9E01 /* PaletteExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaletteExtractor.swift; sourceTree = "<group>"; };
 		6D5C4B3A291807FECDAABBCC /* CustomWaveformRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWaveformRenderer.swift; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 		9196D4E2028FD0F665005380 /* Chromastage */ = {
 			isa = PBXGroup;
 			children = (
+				C2B1A0F9E8D7C6B5A4F3E2D1 /* AppIcon.icns */,
 				7E10437CC6B7EEDAB465EB51 /* Resources */,
 				6545A1367596BD0548EF5ED1 /* Sources */,
 			);
@@ -165,6 +168,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1E2F3A4B5C6D7E8F9A0B1C2 /* AppIcon.icns in Resources */,
 				7F913B4D7532473A222E16D1 /* Resources in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
