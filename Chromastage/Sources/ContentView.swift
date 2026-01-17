@@ -935,7 +935,7 @@ private enum OnboardingStep: Int, CaseIterable {
     case .spotify:
       return "Do you use Spotify? Chromastage can read track info from Spotify if you want. You can change this later in Settings."
     case .audio:
-      return "Chromastage needs Screen & System Audio Recording permission to react to music."
+      return "Chromastage needs System Audio Recording permission to react to music."
     case .controls:
       return "Use Auto for timed presets, or press Z anytime to jump to the next preset. You can favorite or block presets you don't like."
     case .personalize:
@@ -1135,8 +1135,8 @@ private struct OnboardingView: View {
         Text("How to enable:")
           .font(.system(size: 13, weight: .semibold, design: .rounded))
         Text("1. Open System Settings → Privacy & Security.")
-        Text("2. Select Screen & System Audio Recording.")
-        Text("3. Enable Chromastage, then relaunch if prompted.")
+        Text("2. Select System Audio Recording (may appear as Screen & System Audio Recording).")
+        Text("3. Enable Chromastage (Audio Only), then relaunch if prompted.")
       }
       .font(.system(size: 12, weight: .medium, design: .rounded))
       .foregroundStyle(.secondary)

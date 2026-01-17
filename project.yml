@@ -3,7 +3,7 @@ options:
   bundleIdPrefix: com.chromastage
   createIntermediateGroups: true
   deploymentTarget:
-    macOS: "13.0"
+    macOS: "14.2"
 
 targets:
   Chromastage:
@@ -18,5 +18,5 @@ targets:
         INFOPLIST_FILE: Chromastage/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: com.chromastage.app
         ASSETCATALOG_COMPILER_APPICON_NAME: ""
-        MACOSX_DEPLOYMENT_TARGET: "13.0"
+        MACOSX_DEPLOYMENT_TARGET: "14.2"
         SWIFT_VERSION: "5.9"

@@ -27,6 +27,15 @@ struct ChromastageApp: App {
           showAbout()
         }
       }
+#if DEBUG
+      CommandMenu("Debug") {
+        Button("Reset Onboarding") {
+          UserDefaults.standard.removeObject(forKey: "hasSeenOnboarding")
+          UserDefaults.standard.removeObject(forKey: PreferenceKeys.useSpotify)
+          UserDefaults.standard.removeObject(forKey: PreferenceKeys.hasSetSpotifyPreference)
+        }
+      }
+#endif
     }
 
     Settings {

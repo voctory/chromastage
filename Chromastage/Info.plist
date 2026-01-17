@@ -26,5 +26,7 @@
   <string>NSApplication</string>
   <key>NSAppleEventsUsageDescription</key>
   <string>Chromastage needs access to Apple Music to read now playing info and control playback.</string>
+  <key>NSAudioCaptureUsageDescription</key>
+  <string>Chromastage needs access to your system audio to drive the visualizer.</string>
 </dict>
 </plist>

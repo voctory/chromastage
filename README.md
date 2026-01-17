@@ -16,7 +16,7 @@ Native macOS music visualizer with Apple Music control and system audio capture.
 
 ## Requirements
 
-- macOS 13+ (ScreenCaptureKit).
+- macOS 14.2+ (System Audio Recording only).
 - Xcode 15+ (recommended).
 
 ## Build & Run
@@ -56,7 +56,7 @@ Notes:
 
 ## Permissions
 
-- Screen Recording: required for system audio capture (System Settings → Privacy & Security → Screen Recording).
+- System Audio Recording: required for system audio capture (System Settings → Privacy & Security → System Audio Recording).
 - Automation: allow control of Apple Music when prompted.
 
 ## Engine Development
@@ -95,7 +95,7 @@ Chromastage/Resources/Presets
 
 ## Troubleshooting
 
-- No audio or visuals: Confirm Screen Recording permission is enabled for Chromastage.
+- No audio or visuals: Confirm System Audio Recording permission is enabled for Chromastage.
 - Apple Music controls unavailable: Approve the Automation prompt for Apple Music.
 - Spotify not available: Install Spotify, then enable it in Settings → Music Sources.
 - Presets missing: Run `node scripts/build-presets-json.mjs` to regenerate.

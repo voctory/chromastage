@@ -1,9 +1,7 @@
 import Foundation
-import ScreenCaptureKit
-import AVFoundation
-import CoreGraphics
+import CoreAudio
 
-enum ScreenCapturePermissionStatus: String {
+enum SystemAudioPermissionStatus: String {
   case unknown
   case granted
   case denied
@@ -13,13 +11,17 @@ enum ScreenCapturePermissionStatus: String {
 final class AudioCapture: NSObject, ObservableObject {
   @Published var isCapturing = false
   @Published var statusMessage: String = ""
-  @Published var permissionStatus: ScreenCapturePermissionStatus = .unknown
+  @Published var permissionStatus: SystemAudioPermissionStatus = .unknown
   @Published var needsAttention = false
   @Published var lastError: String?
 
-  nonisolated(unsafe) private let ringBuffer = AudioRingBuffer(capacity: 16384)
-  private let audioQueue = DispatchQueue(label: "Chromastage.AudioCapture")
-  private var stream: SCStream?
+  nonisolated(unsafe) private let ringBuffer = AudioRingBuffer(capacity: 16_384)
+
+  private var tapID: AudioObjectID = kAudioObjectUnknown
+  private var aggregateDeviceID: AudioObjectID = kAudioObjectUnknown
+  private var tapIOProcID: AudioDeviceIOProcID?
+  private var tapUID: String?
+
   private var isStarting = false
   private var permissionProbeTask: Task<Void, Never>?
   private var pendingStartAfterPermission = false
@@ -35,104 +37,89 @@ final class AudioCapture: NSObject, ObservableObject {
     isStarting = true
     defer { isStarting = false }
 
-    statusMessage = "Requesting system audio capture permission..."
-
-    let permission = refreshPermissionStatus(requestIfNeeded: requestPermission)
-    if permission != .granted {
-      pendingStartAfterPermission = true
-      schedulePermissionProbe()
-      markCaptureIssue("Enable Screen & System Audio Recording in System Settings.")
+    guard #available(macOS 14.2, *) else {
+      markCaptureIssue("System audio capture requires macOS 14.2 or later.")
+      permissionStatus = .denied
       return
     }
+
+    let permission = refreshPermissionStatus(requestIfNeeded: false)
+    if permission != .granted, !requestPermission {
+      pendingStartAfterPermission = true
+      schedulePermissionProbe()
+      markCaptureIssue("Enable System Audio Recording in System Settings to react to music.")
+      return
+    }
+
     pendingStartAfterPermission = false
     stopPermissionProbe()
 
-    do {
-      let content = try await SCShareableContent.current
-      guard let display = content.displays.first else {
-        markCaptureIssue("No display available for capture.")
-        return
-      }
+    statusMessage = requestPermission
+      ? "Requesting System Audio Recording permission…"
+      : "Starting system audio capture…"
 
-      let filter = SCContentFilter(display: display, excludingWindows: [])
-      let config = SCStreamConfiguration()
-      config.capturesAudio = true
-      config.excludesCurrentProcessAudio = true
-      config.sampleRate = 44_100
-      config.channelCount = 2
-      config.minimumFrameInterval = CMTime(value: 1, timescale: 60)
-      config.queueDepth = 8
-      config.width = 2
-      config.height = 2
-      config.pixelFormat = kCVPixelFormatType_32BGRA
-
-      let stream = SCStream(filter: filter, configuration: config, delegate: self)
-      try stream.addStreamOutput(self, type: .audio, sampleHandlerQueue: audioQueue)
-      try await stream.startCapture()
-
-      self.stream = stream
+    let status = startTap()
+    if status == kAudioHardwareNoError {
       isCapturing = true
       needsAttention = false
       lastError = nil
       permissionStatus = .granted
-      statusMessage = "Capturing system audio (Apple Music and other audio apps)."
-    } catch {
-      _ = refreshPermissionStatus(requestIfNeeded: false)
-      markCaptureIssue("Audio capture failed: \(error.localizedDescription)")
+      statusMessage = "Capturing system audio."
+      return
     }
+
+    let permissionStatus = refreshPermissionStatus(requestIfNeeded: false)
+    if permissionStatus != .granted {
+      pendingStartAfterPermission = true
+      schedulePermissionProbe()
+    }
+
+    markCaptureIssue("Audio capture failed: \(Self.describeCoreAudioStatus(status))")
   }
 
   func stop() {
     pendingStartAfterPermission = false
     stopPermissionProbe()
-    guard let stream else { return }
-    stream.stopCapture { [weak self] error in
-      DispatchQueue.main.async {
-        if let error {
-          self?.statusMessage = "Stop capture failed: \(error.localizedDescription)"
-        } else {
-          self?.statusMessage = "Capture stopped."
-        }
-        self?.isCapturing = false
-      }
+    guard #available(macOS 14.2, *) else {
+      isCapturing = false
+      return
     }
-    self.stream = nil
+
+    stopTap()
+    isCapturing = false
+    statusMessage = "Capture stopped."
   }
 
-  func refreshPermissionStatus(requestIfNeeded: Bool = false) -> ScreenCapturePermissionStatus {
-    if permissionStatus == .granted && !requestIfNeeded {
+  func refreshPermissionStatus(requestIfNeeded: Bool = false) -> SystemAudioPermissionStatus {
+    if isCapturing {
+      permissionStatus = .granted
       return .granted
     }
-    var granted = CGPreflightScreenCaptureAccess()
-    if !granted, requestIfNeeded {
-      granted = CGRequestScreenCaptureAccess()
+
+    guard #available(macOS 14.2, *) else {
+      permissionStatus = .denied
+      return .denied
     }
-    let status: ScreenCapturePermissionStatus = granted ? .granted : .denied
+
+    _ = createTapIfNeeded()
+    let authorized = isAudioCaptureAuthorized()
+
+    if !authorized, requestIfNeeded {
+      _ = requestAudioCaptureAuthorization()
+    }
+
+    let status: SystemAudioPermissionStatus = isAudioCaptureAuthorized() ? .granted : .denied
     permissionStatus = status
-    if granted {
+
+    if status == .granted {
       if !pendingStartAfterPermission && !isStarting {
         stopPermissionProbe()
       }
     } else if pendingStartAfterPermission {
       schedulePermissionProbe()
-      Task { @MainActor in
-        await self.probeShareableContentAccess()
-      }
     }
-    return status
-  }
 
-  func requestPermission() -> Bool {
-    pendingStartAfterPermission = true
-    let granted = CGRequestScreenCaptureAccess()
-    permissionStatus = granted ? .granted : .denied
-    if granted {
-      pendingStartAfterPermission = false
-      stopPermissionProbe()
-    } else {
-      schedulePermissionProbe()
-    }
-    return granted
+    return status
   }
 
   private func markCaptureIssue(_ message: String) {
@@ -140,7 +127,6 @@ final class AudioCapture: NSObject, ObservableObject {
     lastError = message
     needsAttention = true
     isCapturing = false
-    stream = nil
   }
 
   private func schedulePermissionProbe() {
@@ -149,10 +135,7 @@ final class AudioCapture: NSObject, ObservableObject {
       guard let self else { return }
       while !Task.isCancelled {
         try? await Task.sleep(nanoseconds: 1_500_000_000)
-        var status = self.refreshPermissionStatus(requestIfNeeded: false)
-        if status != .granted {
-          status = await self.probeShareableContentAccess()
-        }
+        let status = self.refreshPermissionStatus(requestIfNeeded: false)
         if status == .granted {
           if self.isStarting {
             continue
@@ -173,21 +156,190 @@ final class AudioCapture: NSObject, ObservableObject {
     permissionProbeTask = nil
   }
 
-  @MainActor
-  @discardableResult
-  private func probeShareableContentAccess() async -> ScreenCapturePermissionStatus {
-    guard permissionStatus != .granted else { return .granted }
-    do {
-      let content = try await SCShareableContent.current
-      if !content.displays.isEmpty {
-        permissionStatus = .granted
-        stopPermissionProbe()
-        return .granted
+  @available(macOS 14.2, *)
+  private func startTap() -> OSStatus {
+    if tapID == kAudioObjectUnknown || aggregateDeviceID == kAudioObjectUnknown || tapIOProcID == nil {
+      guard createTapIfNeeded() else {
+        return kAudioHardwareUnspecifiedError
       }
-    } catch {
-      // Ignore; permission likely still denied.
     }
-    return permissionStatus
+
+    guard let tapIOProcID else {
+      return kAudioHardwareUnspecifiedError
+    }
+
+    return AudioDeviceStart(aggregateDeviceID, tapIOProcID)
+  }
+
+  @available(macOS 14.2, *)
+  private func stopTap() {
+    if let tapIOProcID {
+      AudioDeviceStop(aggregateDeviceID, tapIOProcID)
+      AudioDeviceDestroyIOProcID(aggregateDeviceID, tapIOProcID)
+    }
+
+    if aggregateDeviceID != kAudioObjectUnknown {
+      AudioHardwareDestroyAggregateDevice(aggregateDeviceID)
+    }
+
+    if tapID != kAudioObjectUnknown {
+      AudioHardwareDestroyProcessTap(tapID)
+    }
+
+    tapUID = nil
+    tapID = kAudioObjectUnknown
+    aggregateDeviceID = kAudioObjectUnknown
+    tapIOProcID = nil
+  }
+
+  @available(macOS 14.2, *)
+  private func createTapIfNeeded() -> Bool {
+    if tapID != kAudioObjectUnknown && aggregateDeviceID != kAudioObjectUnknown && tapIOProcID != nil {
+      return true
+    }
+
+    if tapID != kAudioObjectUnknown || aggregateDeviceID != kAudioObjectUnknown || tapIOProcID != nil {
+      stopTap()
+    }
+
+    guard let currentProcessAudioObjectID = getCurrentProcessAudioObjectID() else {
+      return false
+    }
+
+    let tapDescription = CATapDescription(stereoGlobalTapButExcludeProcesses: [currentProcessAudioObjectID])
+    tapDescription.name = "Chromastage System Audio Tap"
+    tapDescription.isPrivate = true
+    tapDescription.muteBehavior = .unmuted
+
+    var tapID: AudioObjectID = kAudioObjectUnknown
+    var status = AudioHardwareCreateProcessTap(tapDescription, &tapID)
+    guard status == kAudioHardwareNoError else {
+      return false
+    }
+
+    let tapUID = tapDescription.uuid.uuidString
+    guard let aggregateDeviceID = createAggregateDevice(withTapUID: tapUID) else {
+      AudioHardwareDestroyProcessTap(tapID)
+      return false
+    }
+
+    var tapIOProcID: AudioDeviceIOProcID?
+    status = AudioDeviceCreateIOProcID(
+      aggregateDeviceID,
+      Self.tapIOProc,
+      Unmanaged.passUnretained(self).toOpaque(),
+      &tapIOProcID
+    )
+
+    guard status == kAudioHardwareNoError, tapIOProcID != nil else {
+      AudioHardwareDestroyAggregateDevice(aggregateDeviceID)
+      AudioHardwareDestroyProcessTap(tapID)
+      return false
+    }
+
+    self.tapID = tapID
+    self.tapUID = tapUID
+    self.aggregateDeviceID = aggregateDeviceID
+    self.tapIOProcID = tapIOProcID
+    return true
+  }
+
+  @available(macOS 14.2, *)
+  private func createAggregateDevice(withTapUID tapUID: String) -> AudioObjectID? {
+    let subTap: [String: Any] = [
+      kAudioSubTapUIDKey: tapUID,
+      kAudioSubTapDriftCompensationKey: 1,
+    ]
+
+    let uid = UUID().uuidString
+    let properties: [String: Any] = [
+      kAudioAggregateDeviceNameKey: "Chromastage Audio Capture",
+      kAudioAggregateDeviceUIDKey: uid,
+      kAudioAggregateDeviceTapListKey: [subTap],
+      kAudioAggregateDeviceTapAutoStartKey: 0,
+      kAudioAggregateDeviceIsPrivateKey: 1,
+    ]
+
+    var deviceID: AudioObjectID = kAudioObjectUnknown
+    let status = AudioHardwareCreateAggregateDevice(properties as CFDictionary, &deviceID)
+    guard status == kAudioHardwareNoError, deviceID != kAudioObjectUnknown else {
+      return nil
+    }
+    return deviceID
+  }
+
+  @available(macOS 14.2, *)
+  private func isAudioCaptureAuthorized() -> Bool {
+    if tapID == kAudioObjectUnknown {
+      guard createTapIfNeeded() else { return false }
+    }
+
+    var address = AudioObjectPropertyAddress(
+      mSelector: kAudioTapPropertyFormat,
+      mScope: kAudioObjectPropertyScopeGlobal,
+      mElement: kAudioObjectPropertyElementMain
+    )
+
+    var format = AudioStreamBasicDescription()
+    var size = UInt32(MemoryLayout<AudioStreamBasicDescription>.size)
+    let status = AudioObjectGetPropertyData(tapID, &address, 0, nil, &size, &format)
+    return status == kAudioHardwareNoError
+  }
+
+  @available(macOS 14.2, *)
+  private func requestAudioCaptureAuthorization() -> Bool {
+    if isCapturing {
+      return true
+    }
+
+    let status = startTap()
+    if status == kAudioHardwareNoError {
+      stopTap()
+      return true
+    }
+    stopTap()
+    return false
+  }
+
+  @available(macOS 14.2, *)
+  private func getCurrentProcessAudioObjectID() -> AudioObjectID? {
+    var address = AudioObjectPropertyAddress(
+      mSelector: kAudioHardwarePropertyProcessObjectList,
+      mScope: kAudioObjectPropertyScopeGlobal,
+      mElement: kAudioObjectPropertyElementMain
+    )
+
+    var dataSize: UInt32 = 0
+    let systemObjectID = AudioObjectID(kAudioObjectSystemObject)
+    var status = AudioObjectGetPropertyDataSize(systemObjectID, &address, 0, nil, &dataSize)
+    guard status == kAudioHardwareNoError else {
+      return nil
+    }
+
+    let count = Int(dataSize) / MemoryLayout<AudioObjectID>.size
+    var processObjectIDs = [AudioObjectID](repeating: 0, count: count)
+    status = AudioObjectGetPropertyData(systemObjectID, &address, 0, nil, &dataSize, &processObjectIDs)
+    guard status == kAudioHardwareNoError else {
+      return nil
+    }
+
+    let currentPID = ProcessInfo.processInfo.processIdentifier
+    for processID in processObjectIDs {
+      var pidAddress = AudioObjectPropertyAddress(
+        mSelector: kAudioProcessPropertyPID,
+        mScope: kAudioObjectPropertyScopeGlobal,
+        mElement: kAudioObjectPropertyElementMain
+      )
+
+      var pid: pid_t = 0
+      var pidSize = UInt32(MemoryLayout<pid_t>.size)
+      status = AudioObjectGetPropertyData(processID, &pidAddress, 0, nil, &pidSize, &pid)
+      if status == kAudioHardwareNoError, pid == currentPID {
+        return processID
+      }
+    }
+
+    return nil
   }
 
   nonisolated func latestAudioBytes(count: Int) -> (mono: Data, left: Data, right: Data) {
@@ -217,98 +369,70 @@ final class AudioCapture: NSObject, ObservableObject {
     let rounded = Int(scaled.rounded())
     return UInt8(max(0, min(255, rounded)))
   }
-}
 
-extension AudioCapture: SCStreamOutput, SCStreamDelegate {
-  nonisolated func stream(_ stream: SCStream, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, of type: SCStreamOutputType) {
-    guard type == .audio else { return }
-    guard CMSampleBufferDataIsReady(sampleBuffer) else { return }
+  nonisolated private func receiveTapAudio(_ inputData: UnsafePointer<AudioBufferList>) {
+    let bufferList = UnsafeMutableAudioBufferListPointer(UnsafeMutablePointer(mutating: inputData))
+    guard !bufferList.isEmpty else { return }
 
-    guard let formatDesc = CMSampleBufferGetFormatDescription(sampleBuffer),
-          let asbd = CMAudioFormatDescriptionGetStreamBasicDescription(formatDesc) else {
-      return
-    }
-
-    let channelCount = Int(asbd.pointee.mChannelsPerFrame)
-    if channelCount == 0 {
-      return
-    }
-
-    let isFloat = (asbd.pointee.mFormatFlags & kAudioFormatFlagIsFloat) != 0
-    let isNonInterleaved = (asbd.pointee.mFormatFlags & kAudioFormatFlagIsNonInterleaved) != 0
-    let frameCount = CMSampleBufferGetNumSamples(sampleBuffer)
-
-    var blockBuffer: CMBlockBuffer?
-    var bufferListSizeNeeded: Int = 0
-    _ = CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(
-      sampleBuffer,
-      bufferListSizeNeededOut: &bufferListSizeNeeded,
-      bufferListOut: nil,
-      bufferListSize: 0,
-      blockBufferAllocator: nil,
-      blockBufferMemoryAllocator: nil,
-      flags: 0,
-      blockBufferOut: &blockBuffer
-    )
-
-    if bufferListSizeNeeded == 0 { return }
-
-    let bufferListRaw = UnsafeMutableRawPointer.allocate(
-      byteCount: bufferListSizeNeeded,
-      alignment: MemoryLayout<AudioBufferList>.alignment
-    )
-    defer { bufferListRaw.deallocate() }
-
-    let audioBufferList = bufferListRaw.bindMemory(to: AudioBufferList.self, capacity: 1)
-
-    let status = CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer(
-      sampleBuffer,
-      bufferListSizeNeededOut: nil,
-      bufferListOut: audioBufferList,
-      bufferListSize: bufferListSizeNeeded,
-      blockBufferAllocator: nil,
-      blockBufferMemoryAllocator: nil,
-      flags: 0,
-      blockBufferOut: &blockBuffer
-    )
-
-    if status != noErr {
-      return
-    }
-
-    let bufferList = UnsafeMutableAudioBufferListPointer(audioBufferList)
-    guard bufferList.count > 0 else { return }
-
-    if isNonInterleaved, bufferList.count >= 2 {
-      let leftBuffer = bufferList[0]
-      let rightBuffer = bufferList[1]
-
-      if isFloat {
-        let leftPtr = leftBuffer.mData!.assumingMemoryBound(to: Float.self)
-        let rightPtr = rightBuffer.mData!.assumingMemoryBound(to: Float.self)
-        ringBuffer.appendInterleaved(leftPtr: leftPtr, rightPtr: rightPtr, frameCount: frameCount)
-      } else {
-        let leftPtr = leftBuffer.mData!.assumingMemoryBound(to: Int16.self)
-        let rightPtr = rightBuffer.mData!.assumingMemoryBound(to: Int16.self)
-        ringBuffer.appendInterleavedInt16(leftPtr: leftPtr, rightPtr: rightPtr, frameCount: frameCount)
+    if bufferList.count >= 2,
+       bufferList[0].mNumberChannels == 1,
+       bufferList[1].mNumberChannels == 1,
+       let leftData = bufferList[0].mData,
+       let rightData = bufferList[1].mData {
+      let leftSamples = leftData.assumingMemoryBound(to: Float.self)
+      let rightSamples = rightData.assumingMemoryBound(to: Float.self)
+      let leftCount = Int(bufferList[0].mDataByteSize) / MemoryLayout<Float>.size
+      let rightCount = Int(bufferList[1].mDataByteSize) / MemoryLayout<Float>.size
+      let frameCount = min(leftCount, rightCount)
+      if frameCount > 0 {
+        ringBuffer.appendInterleaved(leftPtr: leftSamples, rightPtr: rightSamples, frameCount: frameCount)
       }
       return
     }
 
-    let buffer = bufferList[0]
-    if isFloat {
-      let samplePtr = buffer.mData!.assumingMemoryBound(to: Float.self)
-      ringBuffer.appendInterleaved(samplePtr: samplePtr, frameCount: frameCount, channels: channelCount)
-    } else {
-      let samplePtr = buffer.mData!.assumingMemoryBound(to: Int16.self)
-      ringBuffer.appendInterleavedInt16(samplePtr: samplePtr, frameCount: frameCount, channels: channelCount)
+    for buffer in bufferList {
+      guard let data = buffer.mData else { continue }
+      let channels = Int(buffer.mNumberChannels)
+      guard channels > 0 else { continue }
+      let sampleCount = Int(buffer.mDataByteSize) / MemoryLayout<Float>.size
+      let frameCount = sampleCount / channels
+      if frameCount <= 0 { continue }
+      let samplePtr = data.assumingMemoryBound(to: Float.self)
+      ringBuffer.appendInterleaved(samplePtr: samplePtr, frameCount: frameCount, channels: channels)
     }
   }
 
-  nonisolated func stream(_ stream: SCStream, didStopWithError error: Error) {
-    DispatchQueue.main.async { [weak self] in
-      self?.markCaptureIssue("Capture stopped: \(error.localizedDescription)")
+  private static func describeCoreAudioStatus(_ status: OSStatus) -> String {
+    if status == kAudioDevicePermissionsError {
+      return "Permission denied. Enable Chromastage under System Settings → Privacy & Security → System Audio Recording."
     }
+
+    if status == kAudioHardwareNotReadyError {
+      return "Audio system not ready."
+    }
+
+    if status == kAudioHardwareUnsupportedOperationError {
+      return "Unsupported operation."
+    }
+
+    if status == kAudioHardwareBadDeviceError {
+      return "Invalid audio device."
+    }
+
+    if status == kAudioHardwareIllegalOperationError {
+      return "Illegal operation."
+    }
+
+    let statusString = String(format: "OSStatus %d", status)
+    return statusString
+  }
+
+  @available(macOS 14.2, *)
+  private static let tapIOProc: AudioDeviceIOProc = { _, _, inputData, _, _, _, clientData in
+    guard let clientData else { return noErr }
+    let audioCapture = Unmanaged<AudioCapture>.fromOpaque(clientData).takeUnretainedValue()
+    audioCapture.receiveTapAudio(inputData)
+    return noErr
   }
 }
 
