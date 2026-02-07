@@ -1,4 +1,5 @@
 import AppKit
+import Sparkle
 import SwiftUI
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
@@ -15,6 +16,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 @main
 struct ChromastageApp: App {
   @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+  @State private var updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
 
   var body: some Scene {
     WindowGroup {
@@ -25,6 +27,9 @@ struct ChromastageApp: App {
       CommandGroup(replacing: .appInfo) {
         Button("About Chromastage") {
           showAbout()
+        }
+        Button("Check for Updates…") {
+          updaterController.checkForUpdates(nil)
         }
       }
 #if DEBUG

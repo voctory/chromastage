@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D1E2F3A4B5C6D7E8F9A0B1C2 /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = C2B1A0F9E8D7C6B5A4F3E2D1 /* AppIcon.icns */; };
+		4C2A04198F9747309E14D382 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = B4A76FE810E94C4B915DB5C2 /* Sparkle */; };
 		00E87DC34A5FBA0B8004F259 /* ChromastageShaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 8453A5C007C3DBBDB83CB646 /* ChromastageShaders.metal */; };
 		0B9D1A2F4F25A1B7C1D43E5A /* BasicWaveformRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E1F0A9B8C7D6E5F4A3B2C /* BasicWaveformRenderer.swift */; };
 		B3F9D1E24A6C8B0F12345679 /* JSEquationRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A45E9F3D2C4B1E0F12345678 /* JSEquationRunner.swift */; };
@@ -58,6 +59,17 @@
 		ECA361A8DE3E6CC65CC2C285 /* MetalRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalRenderer.swift; sourceTree = "<group>"; };
 		C7A1B2C3D4E5F60718293A4D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B3D66ADBEB0449C48EE52B1F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C2A04198F9747309E14D382 /* Sparkle in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		4ACBB7B785887D73D7EA050F = {
@@ -122,6 +134,7 @@
 			buildConfigurationList = 8A8E2BE93C2D4AE22A0DB83E /* Build configuration list for PBXNativeTarget "Chromastage" */;
 			buildPhases = (
 				4A6BB0E9CBD670DB8E7108EF /* Sources */,
+				B3D66ADBEB0449C48EE52B1F /* Frameworks */,
 				5B53B3DE2AECCFE009B8CCD8 /* Resources */,
 			);
 			buildRules = (
@@ -130,6 +143,7 @@
 			);
 			name = Chromastage;
 			packageProductDependencies = (
+				B4A76FE810E94C4B915DB5C2 /* Sparkle */,
 			);
 			productName = Chromastage;
 			productReference = 2E7E6F0F4EBF3A32AB52022F /* Chromastage.app */;
@@ -154,6 +168,9 @@
 			);
 			mainGroup = 4ACBB7B785887D73D7EA050F;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				61D3A8AA4E174B92B82BDB1F /* Sparkle */,
+			);
 			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
@@ -206,6 +223,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		61D3A8AA4E174B92B82BDB1F /* Sparkle */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B4A76FE810E94C4B915DB5C2 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 61D3A8AA4E174B92B82BDB1F /* Sparkle */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCBuildConfiguration section */
 		2CA793F04FBC7B33EFECCC7C /* Release */ = {
