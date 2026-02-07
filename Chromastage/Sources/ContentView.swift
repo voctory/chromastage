@@ -179,7 +179,7 @@ struct ContentView: View {
           .lineLimit(1)
         Text(musicController.artistAlbumLine)
           .font(.system(size: 11, weight: .medium, design: .rounded))
-          .foregroundStyle(Color.white.opacity(0.6))
+          .foregroundStyle(.secondary)
           .lineLimit(1)
       }
       .frame(maxWidth: 180, alignment: .leading)
@@ -216,7 +216,7 @@ struct ContentView: View {
 
           Text(musicController.artistAlbumLine)
             .font(.system(size: 11, weight: .medium, design: .rounded))
-            .foregroundStyle(Color.white.opacity(0.6))
+            .foregroundStyle(.secondary)
             .lineLimit(1)
 
           // Inline transport controls
