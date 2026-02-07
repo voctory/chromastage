@@ -53,6 +53,7 @@ Notes:
 - Use `--skip-dmg` if you only want the zip.
 - When notarization is enabled, the script staples and validates the ticket.
 - To force sign-only (even if credentials are present), use `./Scripts/sign-and-notarize.sh --skip-notarization`.
+- Release + Sparkle update workflow: see `RELEASING.md`.
 
 ## Permissions
 
