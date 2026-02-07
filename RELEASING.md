@@ -12,7 +12,7 @@ https://github.com/voctory/chromastage/releases/latest/download/appcast.xml
 - Xcode 15+.
 - `gh` CLI authenticated for `voctory/chromastage`.
 - Developer ID Application signing identity for release distribution.
-- Optional notarization credentials (see `Scripts/sign-and-notarize.sh`).
+- Optional notarization credentials (see `scripts/sign-and-notarize.sh`).
 
 ## One-time Sparkle key setup
 
@@ -39,10 +39,16 @@ Chromastage/Info.plist
 2. Build and sign (notarization optional):
 
 ```
-./Scripts/sign-and-notarize.sh
+./scripts/sign-and-notarize.sh
 ```
 
 This outputs `Chromastage-<version>.zip` and `Chromastage-<version>.dmg`.
+
+Or use the wrapper script:
+
+```
+scripts/release.sh --version 0.1
+```
 
 3. Build Sparkle appcast tool (one-time per machine):
 

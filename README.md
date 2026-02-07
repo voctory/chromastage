@@ -38,7 +38,7 @@ open Build/Build/Products/Debug/Chromastage.app
 Use the release script (modeled after `../codexbar` and `../trope-mac`) to build, sign, notarize, and zip:
 
 ```sh
-./Scripts/sign-and-notarize.sh
+./scripts/sign-and-notarize.sh
 ```
 
 Notes:
@@ -52,8 +52,9 @@ Notes:
 - The script outputs `Chromastage-<version>.zip` and `Chromastage-<version>.dmg` (with an `/Applications` link) by default.
 - Use `--skip-dmg` if you only want the zip.
 - When notarization is enabled, the script staples and validates the ticket.
-- To force sign-only (even if credentials are present), use `./Scripts/sign-and-notarize.sh --skip-notarization`.
+- To force sign-only (even if credentials are present), use `./scripts/sign-and-notarize.sh --skip-notarization`.
 - Release + Sparkle update workflow: see `RELEASING.md`.
+- Optional wrapper: `scripts/release.sh --version X.Y` (build, appcast, GitHub Release).
 
 ## Permissions
 
