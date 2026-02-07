@@ -226,21 +226,21 @@ struct ContentView: View {
                 .font(.system(size: 12, weight: .semibold))
             }
             .buttonStyle(.plain)
-            .foregroundStyle(Color.white.opacity(0.7))
+            .foregroundStyle(.secondary)
 
             Button { musicController.playPause() } label: {
               Image(systemName: musicController.isPlaying ? "pause.fill" : "play.fill")
                 .font(.system(size: 14, weight: .semibold))
             }
             .buttonStyle(.plain)
-            .foregroundStyle(Color.white.opacity(0.9))
+            .foregroundStyle(.primary)
 
             Button { musicController.nextTrack() } label: {
               Image(systemName: "forward.fill")
                 .font(.system(size: 12, weight: .semibold))
             }
             .buttonStyle(.plain)
-            .foregroundStyle(Color.white.opacity(0.7))
+            .foregroundStyle(.secondary)
           }
           .padding(.top, 4)
         }
@@ -647,7 +647,7 @@ private struct PlaybackTransportView: View {
               .font(.system(size: 16, weight: .semibold))
           }
           .buttonStyle(.plain)
-          .foregroundStyle(Color.white.opacity(0.8))
+          .foregroundStyle(.secondary)
 
           Button {
             musicController.playPause()
@@ -656,7 +656,7 @@ private struct PlaybackTransportView: View {
               .font(.system(size: 20, weight: .semibold))
           }
           .buttonStyle(.plain)
-          .foregroundStyle(Color.white.opacity(0.9))
+          .foregroundStyle(.primary)
 
           Button {
             musicController.nextTrack()
@@ -665,7 +665,7 @@ private struct PlaybackTransportView: View {
               .font(.system(size: 16, weight: .semibold))
           }
           .buttonStyle(.plain)
-          .foregroundStyle(Color.white.opacity(0.8))
+          .foregroundStyle(.secondary)
         }
         .padding(.top, 4)
 
