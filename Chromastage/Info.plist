@@ -25,7 +25,7 @@
   <key>SUFeedURL</key>
   <string>https://github.com/voctory/chromastage/releases/latest/download/appcast.xml</string>
   <key>SUPublicEDKey</key>
-  <string>REPLACE_WITH_SPARKLE_PUBLIC_KEY</string>
+  <string>6AZxxd4EUrCPyr46eKy9xGb0szBOnAymw0/q44KFy5A=</string>
   <key>SUEnableAutomaticChecks</key>
   <true/>
   <key>SUAutomaticallyUpdate</key>
